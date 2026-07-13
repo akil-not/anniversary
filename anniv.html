@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="anniv.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <title>Anniversary</title>
+</head>
+<body>
+    <div id="mainScene">
+        <video autoplay muted loop class="bg-video">
+            <source src="vidpics/Video Project.mp4" type="video/mp4">
+        </video>
+        <div class="container" id="mainContent">
+            <img src="vidpics/ChatGPT_Image_Jun_29__2026__05_19_27_PM-removebg-preview.png" alt="Anniversary" class="anniv-image">
+          <div class="start-button">
+            <img id="startBtn" src="vidpics/start-play-button-isolated-elements-260nw-2208232359-removebg-preview.png" alt="start">
+          </div>
+        </div>
+    </div>
+
+    <!-- Replace src with your actual sound files -->
+    <audio id="clickSound" src="vidpics/Start.mp3" preload="auto"></audio>
+    <audio id="navSound" src="vidpics/Start.mp3" preload="auto"></audio>
+    <audio id="typeSound" src="vidpics/pixel-type.mp3" preload="auto" loop></audio>
+    <audio id="skipSound" src="vidpics/Start.mp3" preload="auto"></audio>
+    <audio id="giftSound" src="vidpics/gift-pop.mp3" preload="auto"></audio>
+    <audio id="flowerTypeSound" src="vidpics/pixel-type.mp3" preload="auto" loop></audio>
+    <audio id="happySound" src="vidpics/happy-sound.mp3" preload="auto"></audio>
+
+    <div class="slideshow-scene" id="slideshowScene">
+        <div class="slide-row">
+            <div class="slide-text-panel">
+                <p id="typewriterText"></p>
+                <span class="cursor-blink" id="cursorBlink">▌</span>
+            </div>
+
+            <div class="slide-container">
+                <div class="slide-bg"></div>
+                <img id="slideImg" class="slide-img" src="" alt="Memory">
+                <img id="skipBtn" class="skip-btn" src="vidpics/skip-next-button-pixelated-rgb-260nw-2224662875-removebg-preview.png" alt="skip">
+            </div>
+        </div>
+        <div class="slide-nav">
+            <button id="prevBtn" class="nav-btn">&#10094;</button>
+            <div class="dots" id="dotsContainer"></div>
+            <button id="nextBtn" class="nav-btn">&#10095;</button>
+        </div>
+        <div class="slide-counter" id="slideCounter"></div>
+    </div>
+
+    <div class="gift-scene" id="giftScene">
+        <img id="giftBox" class="gift-box" src="vidpics/box.gif" alt="Gift">
+        <img id="giftFlower" class="gift-flower" src="vidpics/flowerpurple.png" alt="Flower">
+        <div class="flower-text-panel" id="flowerTextPanel">
+            <p id="flowerTypewriterText" class="pixelify-sans-flower"></p>
+            <span class="cursor-blink" id="flowerCursorBlink">▌</span>
+        </div>
+    </div>
+
+    <div class="like-it-scene" id="likeItScene">
+        <div class="like-it-content">
+            <img src="vidpics/funny-cat-memes-go-hard-cover_675.jpg" class="like-it-photo" alt="Memory">
+            <p class="question-text">Do you like it?</p>
+            <div class="like-it-buttons">
+                <button id="likeItYesBtn" class="yes-btn">Yes</button>
+                <button id="likeItNoBtn" class="no-btn">No</button>
+            </div>
+            <div class="like-it-result" id="likeItResult">
+                <p>I knew it, you would like it!</p>
+                <img src="vidpics/New Piskel.gif" class="result-photo" alt="Result">
+            </div>
+        </div>
+    </div>
+
+    <div class="like-me-scene" id="likeMeScene">
+        <div class="like-me-content">
+            <p class="question-text">Do you like me or not?</p>
+            <p class="like-me-subtitle" id="likeMeSubtitle"></p>
+            <div class="like-me-buttons">
+                <button id="likeMeYesBtn" class="yes-btn">Yes</button>
+                <button id="likeMeNoBtn" class="no-btn-disabled">No</button>
+            </div>
+            <div class="like-me-error" id="likeMeError">Error: invalid option ❌</div>
+        </div>
+    </div>
+
+    <div class="like-me-result-scene" id="likeMeResultScene">
+        <div class="like-me-result-content">
+            <p>Yay! I like you too!</p>
+            <img src="vidpics/likemecat.jpg" class="result-photo" id="likeMeResultPhoto" alt="Result">
+        </div>
+    </div>
+
+    <div class="anniversary-scene" id="anniversaryScene">
+        <div class="hearts-container" id="heartsContainer"></div>
+        <h1 class="anniversary-title">Happy Anniversary</h1>
+        <img src="vidpics/uslast.jpg" class="anniversary-photo" alt="Us">
+        <button id="loveMoreBtn" class="love-more-btn">I love you more</button>
+    </div>
+
+    <script>
+        // EDIT THIS ARRAY: 10 photo paths, in the order you want them shown
+        const slides = [
+            "vidpics/6339215225042701894.jpg",
+            "vidpics/6339215225042701879.jpg",
+            "vidpics/6339215225042701863.jpg",
+            "vidpics/6336963425229016887.jpg",
+            "vidpics/6300688651138044903.jpg",
+            "vidpics/6298825550159613848.jpg",
+            "vidpics/6176895118003080551.jpg",
+            "vidpics/6172425319768329566.jpg",
+            "vidpics/6087120302832816154.jpg",
+            "vidpics/6066848568296804092.jpg"
+        ];
+
+        // EDIT THIS ARRAY — one caption/message per slide, same order as above
+        const messages = [
+            "Hi love first of all Happy anniversary satin alam mo ba na sobrang saya ko na nakilala kita i never thought na mag lalandas tayo even though yung una natin pag kita medyo asaran talaga HAHAHAHA",
+            "Pumasok sa isip ko na may something talaga sayo na nararamdan ko na hindi ko maintindihan kung bakit. Kaya I take the risk nalang na kala ko di mo ko magugustuhan. Pero eto tayo mag 1yr na dating mag kalaro lang sa valo",
+            "Pero kiddding aside i learned a lot from you and i really appreciate it. That i feel something important to me and for us. Dami na nag daang panahon and dami nading dumaan pagsubok satin i hope we learn from each other and learn to forgive.",
+            "The more we forgive the more we love each other. I hope we can continue to grow together for us to achieve our dreamms and goals. I wish and hope more years to come i will choose you every single day that knowing you are my one only special person to me.",
+            "Its really hard to think about it how life is so challenging but i know this is just the part for us to grow and to have acknowledge on each other.",
+            "I love you more the more you know it",
+            "Write your seventh memory here...",
+            "Write your eighth memory here...",
+            "Write your ninth memory here...",
+            "Write your tenth memory here..."
+        ];
+
+        let currentSlide = 0;
+        let autoAdvanceTimer = null;
+        let typingTimer = null;
+        let isTyping = false;
+
+        const mainContent = document.getElementById('mainContent');
+        const slideshowScene = document.getElementById('slideshowScene');
+        const startBtn = document.getElementById('startBtn');
+        const clickSound = document.getElementById('clickSound');
+        const navSound = document.getElementById('navSound');
+        const typeSound = document.getElementById('typeSound');
+        const slideImg = document.getElementById('slideImg');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        const typewriterText = document.getElementById('typewriterText');
+
+        const skipBtn = document.getElementById('skipBtn');
+        const skipSound = document.getElementById('skipSound');
+        const giftSound = document.getElementById('giftSound');
+        const giftScene = document.getElementById('giftScene');
+        const giftBox = document.getElementById('giftBox');
+        const giftFlower = document.getElementById('giftFlower');
+
+        const flowerTextPanel = document.getElementById('flowerTextPanel');
+        const flowerTypewriterText = document.getElementById('flowerTypewriterText');
+        const flowerTypeSound = document.getElementById('flowerTypeSound');
+
+        const flowerMessage = "";
+
+        const likeItScene = document.getElementById('likeItScene');
+        const likeItYesBtn = document.getElementById('likeItYesBtn');
+        const likeItNoBtn = document.getElementById('likeItNoBtn');
+        const likeItResult = document.getElementById('likeItResult');
+
+        const likeMeScene = document.getElementById('likeMeScene');
+        const likeMeYesBtn = document.getElementById('likeMeYesBtn');
+        const likeMeNoBtn = document.getElementById('likeMeNoBtn');
+        const likeMeError = document.getElementById('likeMeError');
+
+        const happySound = document.getElementById('happySound');
+        const likeMeResultPhoto = document.getElementById('likeMeResultPhoto');
+        const likeMeSubtitle = document.getElementById('likeMeSubtitle');
+        const likeMeResultScene = document.getElementById('likeMeResultScene');
+
+        const likeMeSubtitleText = "";
+
+        const anniversaryScene = document.getElementById('anniversaryScene');
+        const heartsContainer = document.getElementById('heartsContainer');
+        const loveMoreBtn = document.getElementById('loveMoreBtn');
+        let heartFallSpeed = 4500;
+        let heartsPerBatch = 3;
+        let heartSpawnTimer = null;
+
+        function buildDots() {
+            dotsContainer.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === currentSlide) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    if (isTyping) return;
+                    goToSlide(i);
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function typeMessage(text) {
+            clearInterval(typingTimer);
+            typewriterText.textContent = '';
+            let i = 0;
+            isTyping = true;
+            nextBtn.classList.add('disabled');
+
+            typeSound.currentTime = 0;
+            typeSound.play().catch(() => {});
+
+            typingTimer = setInterval(() => {
+                if (i < text.length) {
+                    typewriterText.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingTimer);
+                    isTyping = false;
+                    nextBtn.classList.remove('disabled');
+                    typeSound.pause();
+                    typeSound.currentTime = 0;
+                }
+            }, 45);
+        }
+
+        function typeFlowerMessage(text) {
+            let i = 0;
+            flowerTypewriterText.textContent = '';
+
+            if (!text) return;
+
+            flowerTypeSound.currentTime = 0;
+            flowerTypeSound.play().catch(() => {});
+
+            const flowerTypingTimer = setInterval(() => {
+                if (i < text.length) {
+                    flowerTypewriterText.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(flowerTypingTimer);
+                    flowerTypeSound.pause();
+                    flowerTypeSound.currentTime = 0;
+                }
+            }, 45);
+        }
+
+        function showSlide(index) {
+            slideImg.style.opacity = 0;
+            setTimeout(() => {
+                slideImg.src = slides[index];
+                slideImg.style.opacity = 1;
+            }, 250);
+
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+
+            slideCounter.textContent = `${index + 1} / ${slides.length}`;
+
+            typeMessage(messages[index]);
+
+            if (index === slides.length - 1) {
+                skipBtn.classList.add('visible');
+            } else {
+                skipBtn.classList.remove('visible');
+            }
+        }
+
+        function playNavSound() {
+            navSound.currentTime = 0;
+            navSound.play().catch(() => {});
+        }
+
+        function goToSlide(index) {
+            currentSlide = (index + slides.length) % slides.length;
+            showSlide(currentSlide);
+            resetAutoAdvance();
+        }
+
+        function nextSlide(playSound = true) {
+            if (isTyping) return;
+            if (playSound) playNavSound();
+            goToSlide(currentSlide + 1);
+        }
+        function prevSlide(playSound = true) {
+            if (playSound) playNavSound();
+            goToSlide(currentSlide - 1);
+        }
+
+        function resetAutoAdvance() {
+            clearInterval(autoAdvanceTimer);
+            autoAdvanceTimer = setInterval(() => nextSlide(false), 4000);
+        }
+
+        function spawnHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('falling-heart');
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            heart.style.fontSize = (Math.random() * 16 + 16) + 'px';
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 6000);
+        }
+
+        function startHeartRain() {
+            clearInterval(heartSpawnTimer);
+            heartSpawnTimer = setInterval(() => {
+                for (let i = 0; i < heartsPerBatch; i++) {
+                    spawnHeart();
+                }
+            }, heartFallSpeed);
+        }
+
+        nextBtn.addEventListener('click', () => nextSlide(true));
+        prevBtn.addEventListener('click', () => prevSlide(true));
+
+        startBtn.addEventListener('click', () => {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+
+            mainContent.classList.add('fade-out');
+
+            setTimeout(() => {
+                mainContent.style.display = 'none';
+                slideshowScene.classList.add('active');
+                buildDots();
+                showSlide(currentSlide);
+                resetAutoAdvance();
+            }, 800);
+        });
+
+        skipBtn.addEventListener('click', () => {
+            skipSound.currentTime = 0;
+            skipSound.play().catch(() => {});
+
+            slideshowScene.classList.remove('active');
+
+            setTimeout(() => {
+                giftScene.classList.add('active');
+            }, 800);
+        });
+
+        giftBox.addEventListener('click', () => {
+            if (giftBox.classList.contains('opened')) return;
+            giftSound.currentTime = 0;
+            giftSound.play().catch(() => {});
+
+            giftBox.classList.add('opened');
+            giftFlower.classList.add('popped');
+
+            flowerTextPanel.classList.add('visible');
+            typeFlowerMessage(flowerMessage);
+
+            setTimeout(() => {
+                giftScene.classList.remove('active');
+                likeItScene.classList.add('active');
+            }, 3000);
+        });
+
+        likeItNoBtn.addEventListener('mouseenter', () => {
+            const maxX = likeItScene.clientWidth - likeItNoBtn.offsetWidth - 60;
+            const maxY = likeItScene.clientHeight - likeItNoBtn.offsetHeight - 60;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            likeItNoBtn.style.position = 'absolute';
+            likeItNoBtn.style.left = randomX + 'px';
+            likeItNoBtn.style.top = randomY + 'px';
+        });
+
+        likeItYesBtn.addEventListener('click', () => {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+
+            likeItResult.classList.add('visible');
+
+            setTimeout(() => {
+                likeItScene.classList.remove('active');
+                likeMeScene.classList.add('active');
+                likeMeSubtitle.textContent = likeMeSubtitleText;
+            }, 2500);
+        });
+
+        likeMeNoBtn.addEventListener('click', () => {
+            likeMeError.classList.add('visible');
+            setTimeout(() => {
+                likeMeError.classList.remove('visible');
+            }, 1500);
+        });
+
+        likeMeYesBtn.addEventListener('click', () => {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+
+            likeMeScene.classList.remove('active');
+            likeMeResultScene.classList.add('active');
+
+            happySound.currentTime = 0;
+            happySound.play().catch(() => {});
+            likeMeResultPhoto.classList.add('popped');
+
+            setTimeout(() => {
+                likeMeResultScene.classList.remove('active');
+                anniversaryScene.classList.add('active');
+                startHeartRain();
+            }, 2500);
+        });
+
+        loveMoreBtn.addEventListener('click', () => {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+
+            heartsPerBatch += 2;
+            heartFallSpeed = Math.max(heartFallSpeed - 400, 300);
+            startHeartRain();
+
+            loveMoreBtn.classList.add('popped');
+            setTimeout(() => loveMoreBtn.classList.remove('popped'), 300);
+        });
+    </script>
+</body>
+</html>
